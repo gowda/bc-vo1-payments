@@ -8,7 +8,7 @@ AllCops:
 Layout/LineLength:
   Exclude:
     - 'spec/**/*_helper.rb'
-  IgnoredPatterns: ['\A\s*#']
+  IgnoredPatterns: ['\A\s*#', '\A\s*".*"\Z']
 Style/Documentation:
   Enabled: false
 Style/EmptyMethod:

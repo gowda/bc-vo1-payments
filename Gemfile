@@ -15,6 +15,10 @@ gem 'railties', rails_version
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 4.1'
 
+kaminari_version = '~> 1.2.0'
+gem 'kaminari-activerecord', kaminari_version
+gem 'kaminari-core', kaminari_version
+
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'dotenv-rails'
