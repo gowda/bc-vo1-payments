@@ -1,7 +1,10 @@
 # bc-vo1-payments ![test-and-deploy](https://github.com/gowda/bc-vo1-payments/workflows/test-and-deploy/badge.svg)
 
-
 RESTful HTTP API for `payments` resource
+
+[Demo API server](https://bc-vo1-payments.herokuapp.com/). 
+
+Note that it has only API endpoints.
 
 ## Run
 ### Setup
