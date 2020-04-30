@@ -19,6 +19,8 @@ kaminari_version = '~> 1.2.0'
 gem 'kaminari-activerecord', kaminari_version
 gem 'kaminari-core', kaminari_version
 
+gem 'faker', '~> 2.11.0'
+
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'dotenv-rails'
