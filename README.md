@@ -15,6 +15,18 @@ $ bin/setup
 $ bin/rails server
 ```
 
+### List endpoints
+```bash
+$ bin/rails routes
+```
+|Prefix|Verb|URI Pattern|Controller#Action|
+|---|---|---|---|
+|contract_payments|GET|/api/v1/contracts/:contract_id/payments(.:format)|payments#index|
+||POST|/api/v1/contracts/:contract_id/payments(.:format)|payments#create|
+|payment|PATCH|/api/v1/payments/:id(.:format)|payments#update|
+||PUT|/api/v1/payments/:id(.:format)|payments#update
+||DELETE|/api/v1/payments/:id(.:format)|payments#destroy|
+
 ### Tests
 ```bash
 $ bin/rails spec
