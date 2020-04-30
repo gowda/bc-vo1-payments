@@ -27,7 +27,9 @@ RSpec.describe 'Payments', type: :request do
         it 'returns an empty array' do
           expect(response).to have_http_status(:success)
           expect(response.content_type).to match('application/json')
-          expect(response.body).to eql('[]')
+          expect(JSON.parse(response.body)).to match(
+            a_hash_including('sum' => 0, 'items' => [])
+          )
         end
       end
 
@@ -36,10 +38,12 @@ RSpec.describe 'Payments', type: :request do
           5.times.map do |idx|
             contract.payments.create!(
               description: "test description #{idx}",
-              value: rand(1000)
+              value: rand(-500..499)
             )
           end
         end
+
+        let!(:sum) { contract.payments.map(&:value).inject(&:+) }
 
         before do
           get contract_payments_path(contract_id: contract.id),
@@ -49,7 +53,25 @@ RSpec.describe 'Payments', type: :request do
         it 'returns all payments' do
           expect(response).to have_http_status(:success)
           expect(response.content_type).to match('application/json')
-          expect(JSON.parse(response.body).length).to eql(5)
+          expect(JSON.parse(response.body)).to match(
+            a_hash_including(
+              'sum' => sum,
+              'items' => array_including(
+                a_hash_including(
+                  'id',
+                  'contractId',
+                  'description',
+                  'value',
+                  'isImported',
+                  'isDeleted',
+                  'time',
+                  'updatedAt',
+                  'createdAt'
+                )
+              )
+            )
+          )
+          expect(JSON.parse(response.body)['items'].length).to eql(5)
         end
       end
 
@@ -75,12 +97,32 @@ RSpec.describe 'Payments', type: :request do
         end
 
         it 'returns 5 in the first page' do
+          sum = payments.take(5).map(&:value).inject(&:+)
+
           get contract_payments_path(contract_id: contract.id, per_page: 5),
               headers: { 'Accept' => 'application/json' }
 
           expect(response).to have_http_status(:success)
           expect(response.content_type).to match('application/json')
-          expect(JSON.parse(response.body).length).to eql(5)
+          expect(JSON.parse(response.body)).to match(
+            a_hash_including(
+              'sum' => sum,
+              'items' => array_including(
+                a_hash_including(
+                  'id',
+                  'contractId',
+                  'description',
+                  'value',
+                  'isImported',
+                  'isDeleted',
+                  'time',
+                  'updatedAt',
+                  'createdAt'
+                )
+              )
+            )
+          )
+          expect(JSON.parse(response.body)['items'].length).to eql(5)
 
           expect(response.headers['link']).to eql(link_header)
         end
@@ -97,6 +139,8 @@ RSpec.describe 'Payments', type: :request do
             "<#{prev_page_url}>; rel=\"prev\", <#{first_page_url}>; rel=\"first\""
           end
 
+          let!(:sum) { payments.drop(5).map(&:value).inject(&:+) }
+
           before do
             url = contract_payments_path(
               contract_id: contract.id, page: 2, per_page: 5
@@ -108,7 +152,25 @@ RSpec.describe 'Payments', type: :request do
           it 'returns 1 payment' do
             expect(response).to have_http_status(:success)
             expect(response.content_type).to match('application/json')
-            expect(JSON.parse(response.body).length).to eql(1)
+            expect(JSON.parse(response.body)).to match(
+              a_hash_including(
+                'sum' => sum,
+                'items' => array_including(
+                  a_hash_including(
+                    'id',
+                    'contractId',
+                    'description',
+                    'value',
+                    'isImported',
+                    'isDeleted',
+                    'time',
+                    'updatedAt',
+                    'createdAt'
+                  )
+                )
+              )
+            )
+            expect(JSON.parse(response.body)['items'].length).to eql(1)
 
             expect(response.headers['link']).to eql(link_header)
           end
