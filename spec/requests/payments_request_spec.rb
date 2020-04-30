@@ -170,6 +170,7 @@ RSpec.describe 'Payments', type: :request do
               'value',
               'isImported',
               'isDeleted',
+              'time',
               'updatedAt',
               'createdAt'
             )
@@ -210,6 +211,7 @@ RSpec.describe 'Payments', type: :request do
           expect(response).to have_http_status(:success)
           expect(JSON.parse(response.body)).to match(
             a_hash_including(
+              'time',
               'updatedAt',
               'createdAt',
               'id' => payment.id,
@@ -247,6 +249,7 @@ RSpec.describe 'Payments', type: :request do
           expect(response.content_type).to match('application/json')
           expect(JSON.parse(response.body)).to match(
             a_hash_including(
+              'time',
               'updatedAt',
               'createdAt',
               'id' => payment.id,
@@ -291,6 +294,7 @@ RSpec.describe 'Payments', type: :request do
         expect(response).to have_http_status(:success)
         expect(JSON.parse(response.body)).to match(
           a_hash_including(
+            'time',
             'updatedAt',
             'createdAt',
             'id' => payment.id,

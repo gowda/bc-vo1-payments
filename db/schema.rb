@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_29_200402) do
+ActiveRecord::Schema.define(version: 2020_04_30_014611) do
 
   create_table "contracts", force: :cascade do |t|
     t.string "label"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 2020_04_29_200402) do
     t.boolean "imported"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "time"
     t.index ["contract_id"], name: "index_payments_on_contract_id"
   end
 
