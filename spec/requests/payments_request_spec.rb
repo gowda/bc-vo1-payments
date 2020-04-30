@@ -116,4 +116,66 @@ RSpec.describe 'Payments', type: :request do
       end
     end
   end
+
+  describe 'create' do
+    context 'when contract does not exist' do
+      let(:contract_id) { 'non-existent-id' }
+
+      it 'raises error' do
+        expect do
+          post contract_payments_path(contract_id: contract_id),
+               params: {},
+               headers: { 'Accept' => 'application/json' }
+        end.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context 'when contract exists' do
+      let!(:contract) { Contract.create(label: 'test contract') }
+
+      context 'with blank input' do
+        it 'raises error' do
+          expect do
+            post contract_payments_path(contract_id: contract.id),
+                 headers: { 'Accept' => 'application/json' }
+          end.to raise_error(ActiveRecord::RecordInvalid)
+        end
+      end
+
+      context 'with invalid input' do
+        it 'raises error' do
+          expect do
+            post contract_payments_path(contract_id: contract.id),
+                 params: { value: nil, description: nil },
+                 headers: { 'Accept' => 'application/json' }
+          end.to raise_error(ActiveRecord::RecordInvalid)
+        end
+      end
+
+      context 'with valid input' do
+        before do
+          post contract_payments_path(contract_id: contract.id),
+               params: { value: 1234, description: 'test description' },
+               headers: { 'Accept' => 'application/json' }
+        end
+
+        it 'returns 201' do
+          expect(response).to have_http_status(:created)
+          expect(response.content_type).to match('application/json')
+          expect(JSON.parse(response.body)).to match(
+            a_hash_including(
+              'id',
+              'contract_id',
+              'description',
+              'value',
+              'imported',
+              'deleted',
+              'updated_at',
+              'created_at'
+            )
+          )
+        end
+      end
+    end
+  end
 end
