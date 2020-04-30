@@ -16,10 +16,20 @@ class PaymentsController < ApplicationController
     render json: @payment, status: :created
   end
 
+  def update
+    payment.update!(payment_params)
+
+    render json: payment.reload, status: :ok
+  end
+
   private
 
   def contract
     @contract ||= Contract.find(params[:contract_id])
+  end
+
+  def payment
+    @payment ||= Payment.find(params[:id])
   end
 
   def payment_params

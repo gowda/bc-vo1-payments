@@ -6,6 +6,8 @@ Rails.application.routes.draw do
       resources :contracts, only: [] do
         resources :payments, only: %i[index create]
       end
+
+      resources :payments, only: [:update]
     end
   end
 end
