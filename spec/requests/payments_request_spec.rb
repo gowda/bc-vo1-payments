@@ -165,13 +165,13 @@ RSpec.describe 'Payments', type: :request do
           expect(JSON.parse(response.body)).to match(
             a_hash_including(
               'id',
-              'contract_id',
+              'contractId',
               'description',
               'value',
-              'imported',
-              'deleted',
-              'updated_at',
-              'created_at'
+              'isImported',
+              'isDeleted',
+              'updatedAt',
+              'createdAt'
             )
           )
         end
@@ -210,14 +210,14 @@ RSpec.describe 'Payments', type: :request do
           expect(response).to have_http_status(:success)
           expect(JSON.parse(response.body)).to match(
             a_hash_including(
-              'updated_at',
-              'created_at',
+              'updatedAt',
+              'createdAt',
               'id' => payment.id,
-              'contract_id' => payment.contract_id,
+              'contractId' => payment.contract_id,
               'description' => payment.description,
               'value' => payment.value,
-              'imported' => payment.imported,
-              'deleted' => payment.deleted
+              'isImported' => payment.imported,
+              'isDeleted' => payment.deleted
             )
           )
         end
@@ -247,14 +247,14 @@ RSpec.describe 'Payments', type: :request do
           expect(response.content_type).to match('application/json')
           expect(JSON.parse(response.body)).to match(
             a_hash_including(
-              'updated_at',
-              'created_at',
+              'updatedAt',
+              'createdAt',
               'id' => payment.id,
-              'contract_id' => payment.contract_id,
+              'contractId' => payment.contract_id,
               'description' => description,
               'value' => value,
-              'imported' => payment.imported,
-              'deleted' => payment.deleted
+              'isImported' => payment.imported,
+              'isDeleted' => payment.deleted
             )
           )
         end
@@ -291,14 +291,14 @@ RSpec.describe 'Payments', type: :request do
         expect(response).to have_http_status(:success)
         expect(JSON.parse(response.body)).to match(
           a_hash_including(
-            'updated_at',
-            'created_at',
+            'updatedAt',
+            'createdAt',
             'id' => payment.id,
-            'contract_id' => payment.contract_id,
+            'contractId' => payment.contract_id,
             'description' => payment.description,
             'value' => payment.value,
-            'imported' => payment.imported,
-            'deleted' => payment.deleted
+            'isImported' => payment.imported,
+            'isDeleted' => payment.deleted
           )
         )
       end
