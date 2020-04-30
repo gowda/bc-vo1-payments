@@ -22,6 +22,12 @@ class PaymentsController < ApplicationController
     render json: payment.reload, status: :ok
   end
 
+  def destroy
+    payment.destroy!
+
+    render json: payment, status: :ok
+  end
+
   private
 
   def contract

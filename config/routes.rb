@@ -7,7 +7,7 @@ Rails.application.routes.draw do
         resources :payments, only: %i[index create]
       end
 
-      resources :payments, only: [:update]
+      resources :payments, only: %i[update destroy]
     end
   end
 end

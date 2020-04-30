@@ -261,4 +261,47 @@ RSpec.describe 'Payments', type: :request do
       end
     end
   end
+
+  describe 'destroy' do
+    context 'when payment does not exist' do
+      let(:id) { 'non-existent-id' }
+
+      it 'raises error' do
+        expect do
+          delete payment_path(id: id),
+                 headers: { 'Accept' => 'application/json' }
+        end.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context 'when payment exists' do
+      let!(:contract) { Contract.create(label: 'test contract') }
+      let!(:payment) do
+        contract.payments.create(
+          value: 123, description: 'base description'
+        )
+      end
+
+      before do
+        delete payment_path(id: payment.id),
+               headers: { 'Accept' => 'application/json' }
+      end
+
+      it 'succeeds & returns the deleted payment' do
+        expect(response).to have_http_status(:success)
+        expect(JSON.parse(response.body)).to match(
+          a_hash_including(
+            'updated_at',
+            'created_at',
+            'id' => payment.id,
+            'contract_id' => payment.contract_id,
+            'description' => payment.description,
+            'value' => payment.value,
+            'imported' => payment.imported,
+            'deleted' => payment.deleted
+          )
+        )
+      end
+    end
+  end
 end
