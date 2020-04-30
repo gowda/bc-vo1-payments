@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_30_014611) do
+ActiveRecord::Schema.define(version: 2020_04_30_031527) do
 
   create_table "contracts", force: :cascade do |t|
     t.string "label"
@@ -23,7 +23,7 @@ ActiveRecord::Schema.define(version: 2020_04_30_014611) do
     t.string "description"
     t.integer "contract_id"
     t.boolean "deleted"
-    t.boolean "imported"
+    t.boolean "imported", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "time"
