@@ -10,9 +10,19 @@ class PaymentsController < ApplicationController
     render json: @payments
   end
 
+  def create
+    @payment = contract.payments.create!(payment_params)
+
+    render json: @payment, status: :created
+  end
+
   private
 
   def contract
     @contract ||= Contract.find(params[:contract_id])
+  end
+
+  def payment_params
+    params.permit(:description, :value, :imported, :deleted)
   end
 end
