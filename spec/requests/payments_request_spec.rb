@@ -178,4 +178,87 @@ RSpec.describe 'Payments', type: :request do
       end
     end
   end
+
+  describe 'update' do
+    context 'when payment does not exist' do
+      let(:id) { 'non-existent-id' }
+
+      it 'raises error' do
+        expect do
+          patch payment_path(id: id),
+                headers: { 'Accept' => 'application/json' }
+        end.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context 'when payment exists' do
+      let!(:contract) { Contract.create(label: 'test contract') }
+      let!(:payment) do
+        contract.payments.create(
+          value: 123, description: 'base description'
+        )
+      end
+
+      context 'with blank input' do
+        before do
+          patch payment_path(id: payment.id),
+                params: {},
+                headers: { 'Accept' => 'application/json' }
+        end
+
+        it 'succeeds & returns unchanged value' do
+          expect(response).to have_http_status(:success)
+          expect(JSON.parse(response.body)).to match(
+            a_hash_including(
+              'updated_at',
+              'created_at',
+              'id' => payment.id,
+              'contract_id' => payment.contract_id,
+              'description' => payment.description,
+              'value' => payment.value,
+              'imported' => payment.imported,
+              'deleted' => payment.deleted
+            )
+          )
+        end
+      end
+
+      context 'with invalid input' do
+        it 'raises error' do
+          expect do
+            patch payment_path(id: payment.id),
+                  params: { value: nil, description: nil },
+                  headers: { 'Accept' => 'application/json' }
+          end.to raise_error(ActiveRecord::RecordInvalid)
+        end
+      end
+
+      context 'with valid input' do
+        let!(:description) { 'test description' }
+        let!(:value) { 1234 }
+        before do
+          patch payment_path(id: payment.id),
+                params: { value: value, description: description },
+                headers: { 'Accept' => 'application/json' }
+        end
+
+        it 'returns 200 & updated payment' do
+          expect(response).to have_http_status(:success)
+          expect(response.content_type).to match('application/json')
+          expect(JSON.parse(response.body)).to match(
+            a_hash_including(
+              'updated_at',
+              'created_at',
+              'id' => payment.id,
+              'contract_id' => payment.contract_id,
+              'description' => description,
+              'value' => value,
+              'imported' => payment.imported,
+              'deleted' => payment.deleted
+            )
+          )
+        end
+      end
+    end
+  end
 end
