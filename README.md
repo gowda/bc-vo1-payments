@@ -1,4 +1,4 @@
-# bc-vo1-payments ![test](https://github.com/gowda/bc-vo1-payments/workflows/test/badge.svg)
+# bc-vo1-payments ![test-and-deploy](https://github.com/gowda/bc-vo1-payments/workflows/test-and-deploy/badge.svg)
 
 
 RESTful HTTP API for `payments` resource

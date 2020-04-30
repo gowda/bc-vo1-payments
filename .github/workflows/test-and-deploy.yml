@@ -1,4 +1,4 @@
-name: test
+name: test-and-deploy
 
 on: [push]
 
@@ -30,3 +30,18 @@ jobs:
         run: bin/rails cop
       - name: Run rspec
         run: bin/rails spec
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    if: ${{ github.ref == 'refs/heads/master' }}
+    env:
+      HEROKU_BASE_URL: "https://heroku:${{ secrets.HEROKU_API_TOKEN }}@git.heroku.com"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Unshallow the clone & push to heroku
+        run: |
+          cd $GITHUB_WORKSPACE
+          git fetch --unshallow origin
+          git push $HEROKU_URL master:master
+        env:
+          HEROKU_URL: "${{ env.HEROKU_BASE_URL }}/${{ secrets.HEROKU_APP_NAME }}.git"
