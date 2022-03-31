@@ -13,7 +13,7 @@ gem 'activerecord', rails_version
 gem 'railties', rails_version
 
 gem 'pg', '>= 0.18', '< 2.0'
-gem 'puma', '~> 4.1'
+gem 'puma', '~> 4.3'
 
 kaminari_version = '~> 1.2.0'
 gem 'kaminari-activerecord', kaminari_version
